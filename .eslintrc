@@ -1,0 +1,30 @@
+{
+    "env": {
+        "node": true,
+        "commonjs": true,
+        "es6": true
+      },
+    "extends": [
+        "plugin:prettier/recommended"
+    ],
+    "plugins": ["prettier"],
+
+    "overrides": [
+        {
+            "files": [
+                "**/*.js"
+            ],
+            "rules": {
+                "prettier/prettier": ["warn", {
+                    "semi": true,
+                    "trailingComma": "all",
+                    "singleQuote": true,
+                    "printWidth": 80,
+                    "tabWidth": 2
+                }],
+                "newline-before-return": "warn",
+                "space-before-blocks": "warn"
+            }
+        }
+    ]
+}
