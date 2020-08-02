@@ -10,7 +10,8 @@
     ],
     "plugins": ["prettier"],
     "parserOptions": {
-      "sourceType": "module"
+      "sourceType": "module",
+      "ecmaVersion": 2020
     },
     "overrides": [
         {
@@ -26,7 +27,8 @@
                     "tabWidth": 2
                 }],
                 "newline-before-return": "warn",
-                "space-before-blocks": "warn"
+                "space-before-blocks": "warn",
+                "padding-line-between-statements": "warn"
             }
         }
     ]

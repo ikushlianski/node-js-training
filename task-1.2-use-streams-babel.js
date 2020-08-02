@@ -1,13 +1,10 @@
-const path = require('path');
-const {
-  createReadStream,
-  createWriteStream,
-  existsSync,
-  mkdirSync,
-} = require('fs');
-const { pipeline } = require('stream');
-const csvtojson = require('csvtojson');
-const { logMemoryUsage } = require('./utils/logMemoryUsage');
+import path from 'path';
+import { pipeline } from 'stream';
+import { createReadStream, createWriteStream, existsSync, mkdirSync } from 'fs';
+
+import csvtojson from 'csvtojson';
+
+import { logMemoryUsage } from './utils/logMemoryUsage';
 
 const filePath = path.join(__dirname, 'csv', 'books-big.csv');
 const targetFile = path.join(__dirname, 'txt', 'books-stream.txt');
@@ -26,6 +23,6 @@ pipeline(readStream, csvtojson(), writeStream, (err) => {
     console.error(err);
   } else {
     console.log('Read successfully using streams');
-    logMemoryUsage(); // ~6 MB on `books-big.csv`
+    logMemoryUsage(); // ~30 MB on `books-big.csv`
   }
 });
