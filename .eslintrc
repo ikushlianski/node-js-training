@@ -3,12 +3,15 @@
         "node": true,
         "commonjs": true,
         "es6": true
-      },
+    },
+
     "extends": [
         "plugin:prettier/recommended"
     ],
     "plugins": ["prettier"],
-
+    "parserOptions": {
+      "sourceType": "module"
+    },
     "overrides": [
         {
             "files": [
