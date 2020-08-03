@@ -3,12 +3,16 @@
         "node": true,
         "commonjs": true,
         "es6": true
-      },
+    },
+
     "extends": [
         "plugin:prettier/recommended"
     ],
     "plugins": ["prettier"],
-
+    "parserOptions": {
+      "sourceType": "module",
+      "ecmaVersion": 2020
+    },
     "overrides": [
         {
             "files": [
@@ -23,7 +27,8 @@
                     "tabWidth": 2
                 }],
                 "newline-before-return": "warn",
-                "space-before-blocks": "warn"
+                "space-before-blocks": "warn",
+                "padding-line-between-statements": "warn"
             }
         }
     ]
