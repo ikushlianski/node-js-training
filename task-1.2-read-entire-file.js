@@ -3,7 +3,7 @@ const fs = require('fs');
 const csvtojson = require('csvtojson');
 const { logMemoryUsage } = require('./utils/logMemoryUsage');
 
-const sourceFile = path.join(__dirname, 'csv', 'books-big.csv');
+const sourceFile = path.join(__dirname, 'csv', 'books-original.csv');
 const targetFile = path.join(__dirname, 'txt', 'books.txt');
 const targetDir = path.dirname(targetFile);
 
@@ -15,7 +15,13 @@ csvtojson()
   .fromFile(sourceFile)
   .then((jsonObj) => {
     const lines = jsonObj.reduce((result, currentLine) => {
-      result += `${JSON.stringify(currentLine)}\n`;
+      const transformed = Object.fromEntries(
+        Object.entries(currentLine).map(([key, value]) => [
+          key.toLowerCase(),
+          value,
+        ]),
+      );
+      result += `${JSON.stringify(transformed)}\n`;
 
       return result;
     }, '');

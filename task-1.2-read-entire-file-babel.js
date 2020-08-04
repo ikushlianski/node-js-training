@@ -17,7 +17,13 @@ csvtojson()
   .fromFile(sourceFile)
   .then((jsonObj) => {
     const lines = jsonObj.reduce((result, currentLine) => {
-      result += `${JSON.stringify(currentLine)}\n`;
+      const transformed = Object.fromEntries(
+        Object.entries(currentLine).map(([key, value]) => [
+          key.toLowerCase(),
+          value,
+        ]),
+      );
+      result += `${JSON.stringify(transformed)}\n`;
 
       return result;
     }, '');

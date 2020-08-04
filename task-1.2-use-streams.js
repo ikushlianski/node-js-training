@@ -8,8 +8,11 @@ const {
 const { pipeline } = require('stream');
 const csvtojson = require('csvtojson');
 const { logMemoryUsage } = require('./utils/logMemoryUsage');
+const {
+  getLowercaseKeysStream,
+} = require('./utils/getLowerCaseTransformStream');
 
-const filePath = path.join(__dirname, 'csv', 'books-big.csv');
+const filePath = path.join(__dirname, 'csv', 'books-original.csv');
 const targetFile = path.join(__dirname, 'txt', 'books-stream.txt');
 const targetDir = path.dirname(targetFile);
 
@@ -21,7 +24,14 @@ if (!existsSync(targetDir)) {
 
 const writeStream = createWriteStream(targetFile);
 
-pipeline(readStream, csvtojson(), writeStream, (err) => {
+const transformStream = getLowercaseKeysStream([
+  'Author',
+  'Book',
+  'Amount',
+  'Price',
+]);
+
+pipeline(readStream, csvtojson(), transformStream, writeStream, (err) => {
   if (err) {
     console.error(err);
   } else {
