@@ -4,8 +4,11 @@
     "commonjs": true,
     "es6": true
   },
+  "parser": "@typescript-eslint/parser",
   "extends": [
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint"
   ],
   "plugins": [
     "prettier"
@@ -17,7 +20,7 @@
   "overrides": [
     {
       "files": [
-        "**/*.js"
+        "**/*{.js,.ts}"
       ],
       "rules": {
         "prettier/prettier": [
