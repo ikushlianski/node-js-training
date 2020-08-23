@@ -7,7 +7,8 @@ export const expressErrorHandler = (
   res: Response,
   next: NextFunction,
 ): Response => {
+  console.log(err)
   return res
     .status(ErrorCodes.InternalServerError)
-    .send('Internal server error');
+    .send(err);
 };

@@ -4,17 +4,21 @@ import querystring from 'querystring';
 
 import { userService } from './user.service';
 import { ErrorCodes } from '../errors/errors.enum';
+import { validateCreateUser, validateUpdateUser } from './user.validation';
 
 export const userController = express.Router();
 
 const DEFAULT_LIST_LENGTH = 10;
 
-userController.route('/users').get(getUserSuggestions).post(createUser);
+userController
+  .route('/users')
+  .get(getUserSuggestions)
+  .post([validateCreateUser, createUser]);
 
 userController
   .route('/users/:userId')
   .get(getUserById)
-  .put(updateUser)
+  .put([validateUpdateUser, updateUser])
   .delete(softDeleteUser);
 
 function getUserSuggestions(req: Request, res: Response) {
