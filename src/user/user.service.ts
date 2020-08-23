@@ -22,14 +22,45 @@ class UserService {
       throw Error('Please provide all required user params');
     }
 
-    const newUser = { id: uuid, login, password, age, isDeleted: false };
+    const newUser = { id: uuid, login, password, age };
 
     mockUserData.push(newUser);
 
     return newUser;
   }
 
-  update(userDTO: Partial<UserInterface>) {}
+  update(userDto: Partial<UserInterface>, userId: string) {
+    const { login, password, age } = userDto;
+    let updatedUser;
+
+    mockUserData.forEach((user) => {
+      if (user.id === userId) {
+        if (login) user.login = login;
+        if (password) user.password = password;
+        if (age) user.age = age;
+
+        updatedUser = user;
+      }
+    });
+
+    return updatedUser;
+  }
+
+  softDelete(userId: string) {
+    let deletedUser;
+
+    mockUserData.forEach((user) => {
+      if (user.id === userId) {
+        user.isDeleted = true;
+
+        deletedUser = user;
+      }
+    });
+
+    console.log(mockUserData)
+
+    return deletedUser;
+  }
 }
 
 export const userService = new UserService();

@@ -4,7 +4,6 @@ import querystring from 'querystring';
 
 import { userService } from './user.service';
 import { ErrorCodes } from '../errors/errors.enum';
-import { UserDto, UserInterface } from './user.interface';
 
 export const userController = express.Router();
 
@@ -12,7 +11,11 @@ const DEFAULT_LIST_LENGTH = 10;
 
 userController.route('/users').get(getUserSuggestions).post(createUser);
 
-userController.route('/users/:userId').get(getUserById).put(updateUser);
+userController
+  .route('/users/:userId')
+  .get(getUserById)
+  .put(updateUser)
+  .delete(softDeleteUser);
 
 function getUserSuggestions(req: Request, res: Response) {
   const { query } = url.parse(req.url);
@@ -71,5 +74,26 @@ function createUser(req: Request, res: Response) {
 }
 
 function updateUser(req: Request, res: Response) {
+  const { userId } = req.params;
+  const fieldsToUpdate = req.body;
 
+  const updatedUser = userService.update(fieldsToUpdate, userId);
+
+  if (!updatedUser) {
+    return res.status(404).send('User does not exist');
+  }
+
+  return res.send(updatedUser);
+}
+
+function softDeleteUser(req: Request, res: Response) {
+  const { userId } = req.params;
+
+  const deletedUser = userService.softDelete(userId);
+
+  if (!deletedUser) {
+    return res.status(404).send('User does not exist');
+  }
+
+  return res.send(`Deleted user ${userId}`);
 }
