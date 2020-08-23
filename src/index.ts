@@ -7,8 +7,9 @@ import { userController } from './user/user.controller';
 dotenv.config();
 
 const app = express();
-export const appRouter = express.Router();
+const appRouter = express.Router();
 
+app.use(express.json())
 appRouter.use('/api', [userController]);
 app.use(appRouter);
 

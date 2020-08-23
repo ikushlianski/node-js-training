@@ -5,3 +5,5 @@ export interface UserInterface {
   age: number;
   isDeleted: boolean;
 }
+
+export type UserDto = Pick<UserInterface, 'login' | 'password' | 'age'>;
