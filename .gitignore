@@ -2,3 +2,5 @@ node_modules
 task-1/txt
 .vscode
 .env
+src/**/*.js
+dist/
