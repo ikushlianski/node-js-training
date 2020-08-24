@@ -18,7 +18,7 @@ userController
 userController
   .route('/users/:userId')
   .get(getUserById)
-  .put([validateUpdateUser, updateUser])
+  .patch([validateUpdateUser, updateUser])
   .delete(softDeleteUser);
 
 function getUserSuggestions(req: Request, res: Response) {
