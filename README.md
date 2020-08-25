@@ -18,14 +18,19 @@ Run `npm run task-1.2-streams` to launch the same program and it will use stream
 ### Tasks 2.1 and 2.2
 A simple REST service with `CRUD` operations for `User` entity.
 
-Run `npm run start` to launch.
+Run `npm start` to launch.
 
+
+#### Endpoints
 Create user: POST `/api/users`
+
 Update user: PATCH `/api/users/:userId`
+
 Get autosuggest list of users: GET `/api/users/suggest?limit=3&username=rob` (query param `username` is required)
+
 Delete user: `/api/users/:userId`
 
-### Validation rules
+#### Validation rules
 - password must contain letters and numbers;
 - user’s age must be between 4 and 130
 - login, password and age are required when creating a user
