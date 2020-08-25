@@ -3,8 +3,6 @@ import fs from 'fs';
 
 import csvtojson from 'csvtojson';
 
-import { logMemoryUsage } from './utils/logMemoryUsage';
-
 const sourceFile = path.join(__dirname, 'csv', 'books-big.csv');
 const targetFile = path.join(__dirname, 'txt', 'books.txt');
 const targetDir = path.dirname(targetFile);

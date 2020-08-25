@@ -1,3 +1,7 @@
 node_modules
-txt
+core/txt
 .vscode
+.idea
+.env
+src/**/*.js
+dist/
