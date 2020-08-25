@@ -1,27 +1,13 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import url from 'url';
 import querystring from 'querystring';
 
 import { userService } from './user.service';
-import { ErrorCodes } from '../errors/errors.enum';
-import { validateCreateUser, validateUpdateUser } from './user.validation';
-
-export const userController = express.Router();
+import { ErrorCodes } from '../../errors/errors.enum';
 
 const DEFAULT_LIST_LENGTH = 10;
 
-userController
-  .route('/users')
-  .get(getUserSuggestions)
-  .post([validateCreateUser, createUser]);
-
-userController
-  .route('/users/:userId')
-  .get(getUserById)
-  .patch([validateUpdateUser, updateUser])
-  .delete(softDeleteUser);
-
-function getUserSuggestions(req: Request, res: Response) {
+export function getUserSuggestions(req: Request, res: Response): Response {
   const { query } = url.parse(req.url);
 
   if (!query) {
@@ -44,10 +30,10 @@ function getUserSuggestions(req: Request, res: Response) {
     return res.send(autoSuggestList);
   }
 
-  return res.send(ErrorCodes.BadRequest);
+  return res.sendStatus(ErrorCodes.BadRequest);
 }
 
-function getUserById(req: Request, res: Response) {
+export function getUserById(req: Request, res: Response): Response {
   const { userId } = req.params;
 
   if (!userId) {
@@ -65,7 +51,7 @@ function getUserById(req: Request, res: Response) {
   return res.send(user);
 }
 
-function createUser(req: Request, res: Response) {
+export function createUser(req: Request, res: Response): Response {
   const userData = req.body;
 
   try {
@@ -77,7 +63,7 @@ function createUser(req: Request, res: Response) {
   }
 }
 
-function updateUser(req: Request, res: Response) {
+export function updateUser(req: Request, res: Response): Response {
   const { userId } = req.params;
   const fieldsToUpdate = req.body;
 
@@ -90,7 +76,7 @@ function updateUser(req: Request, res: Response) {
   return res.send(updatedUser);
 }
 
-function softDeleteUser(req: Request, res: Response) {
+export function softDeleteUser(req: Request, res: Response): Response {
   const { userId } = req.params;
 
   const deletedUser = userService.softDelete(userId);

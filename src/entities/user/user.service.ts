@@ -1,5 +1,5 @@
 import { UserDto, UserInterface } from './user.interface';
-import { mockUserData } from '../db/mock-data';
+import { mockUserData } from '../../db/mock-data';
 import { v4 as uuidv4 } from 'uuid';
 
 class UserService {
