@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ErrorCodes } from './errors.enum';
+import { ErrorCodes } from './error.enum';
 
 export const expressErrorHandler = (
   err: Error,

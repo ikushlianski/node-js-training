@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
-import { ErrorCodes } from '../../errors/errors.enum';
+import { ErrorCodes } from '../../errors';
 
 const LOGIN_RULES = Joi.string().max(30);
 

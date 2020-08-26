@@ -1,8 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 
-import { expressErrorHandler } from './errors/error.handler';
-import {userController} from "./entities/user/user.route";
+import { expressErrorHandler } from './errors';
+import { userController } from './entities/user';
 
 dotenv.config();
 

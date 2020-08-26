@@ -3,7 +3,7 @@ import url from 'url';
 import querystring from 'querystring';
 
 import { userService } from './user.service';
-import { ErrorCodes } from '../../errors/errors.enum';
+import { ErrorCodes } from '../../errors';
 
 const DEFAULT_LIST_LENGTH = 10;
 

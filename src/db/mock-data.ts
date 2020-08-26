@@ -1,4 +1,4 @@
-import { UserInterface } from '../entities/user/user.interface';
+import { UserInterface } from '../entities/user';
 
 export const mockUserData: UserInterface[] = [
   {
