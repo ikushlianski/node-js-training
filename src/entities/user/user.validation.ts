@@ -23,7 +23,7 @@ export const validateCreateUser = (
     login: LOGIN_RULES.required(),
     password: PASSWORD_RULES.required(),
     age: AGE_RULES.required(),
-    isDeleted: IS_DELETED_RULES,
+    is_deleted: IS_DELETED_RULES,
   });
 
   const { error } = schema.validate(req.body);

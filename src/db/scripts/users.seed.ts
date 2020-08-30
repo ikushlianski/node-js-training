@@ -14,15 +14,15 @@ sequelizeConnection
         login varchar(250) not null,
         password varchar(250) not null,
         age smallint not null,
-        is_deleted boolean
+        is_deleted boolean DEFAULT false NOT NULL
       )
     `);
 
     await sequelizeConnection.query(`
   INSERT INTO ${TableNames.USERS}
   VALUES
-  (uuid_generate_v4(), 'robertA', 'secret44', 25, NULL),
-  (uuid_generate_v4(), 'robertWilliams355', 'qwerty33', 30, NULL),
-  (uuid_generate_v4(), 'robertZ90', 'seCreT;123456', 19, NULL)
+  (uuid_generate_v4(), 'robertA', 'secret44', 25),
+  (uuid_generate_v4(), 'robertWilliams355', 'qwerty33', 30),
+  (uuid_generate_v4(), 'robertZ90', 'seCreT;123456', 19)
 `);
   });

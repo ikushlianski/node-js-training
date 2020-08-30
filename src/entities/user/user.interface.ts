@@ -3,7 +3,7 @@ export interface UserInterface {
   login: string;
   password: string;
   age: number;
-  isDeleted?: boolean;
+  is_deleted?: boolean;
 }
 
 export type UserDto = Pick<UserInterface, 'login' | 'password' | 'age'>;

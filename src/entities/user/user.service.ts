@@ -1,65 +1,78 @@
 import { UserDto, UserInterface } from './user.interface';
 import { mockUserData } from '../../db';
+import { UserModel } from '../../db/models';
 import { v4 as uuidv4 } from 'uuid';
+import { Op } from 'sequelize';
 
 class UserService {
-  getById(userId: string) {
-    return mockUserData.find((user) => user.id === userId);
+  async getById(userId: string) {
+    return await UserModel.findByPk(userId);
   }
 
-  suggest(loginSubstring: string, limit: number) {
-    return mockUserData
-      .filter((user) => user.login.includes(loginSubstring))
-      .sort((a, b) => a.login.localeCompare(b.login))
-      .slice(0, limit);
+  async suggest(loginSubstring: string, limit: number) {
+    const suggestions = await UserModel.findAll({
+      where: {
+        login: {
+          [Op.iLike]: `%${loginSubstring}%`,
+        },
+      },
+      limit,
+    });
+
+    return suggestions.sort((a, b) => a.login.localeCompare(b.login));
   }
 
-  create(userData: UserDto): UserInterface | never {
+  async create(userData: UserDto): Promise<UserModel> {
     const { login, password, age } = userData;
-    const uuid = uuidv4();
 
-    if (!login || !password || !age) {
-      throw Error('Please provide all required user params');
-    }
+    const newUser = new UserModel();
+    newUser.id = uuidv4();
+    newUser.login = login;
+    newUser.password = password;
+    newUser.age = age;
 
-    const newUser = { id: uuid, login, password, age };
-
-    mockUserData.push(newUser);
+    await newUser.save();
 
     return newUser;
   }
 
-  update(userDto: Partial<UserInterface>, userId: string) {
+  async update(userDto: Partial<UserInterface>, userId: string) {
     const { login, password, age } = userDto;
-    let updatedUser;
-
-    mockUserData.forEach((user) => {
-      if (user.id === userId) {
-        if (login) user.login = login;
-        if (password) user.password = password;
-        if (age) user.age = age;
-
-        updatedUser = user;
-      }
+    const userToUpdate = await UserModel.findOne({
+      where: {
+        id: userId,
+      },
     });
 
-    return updatedUser;
+    if (userToUpdate) {
+      if (login) userToUpdate.login = login;
+      if (password) userToUpdate.password = password;
+      if (age) userToUpdate.age = age;
+
+      await userToUpdate.save();
+
+      return userToUpdate;
+    } else {
+      return null;
+    }
   }
 
-  softDelete(userId: string) {
-    let deletedUser;
-
-    mockUserData.forEach((user) => {
-      if (user.id === userId) {
-        user.isDeleted = true;
-
-        deletedUser = user;
-      }
+  async softDelete(userId: string) {
+    const userToSoftDelete = await UserModel.findOne({
+      where: {
+        id: userId,
+      },
     });
 
-    console.log(mockUserData)
+    if (userToSoftDelete) {
+      userToSoftDelete.is_deleted = true;
 
-    return deletedUser;
+      await userToSoftDelete.save();
+
+      return userToSoftDelete;
+    } else {
+      return null;
+    }
   }
 }
 
