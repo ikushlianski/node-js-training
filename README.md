@@ -14,7 +14,7 @@ Run `npm run task-1.2` to launch.
 Run `npm run task-1.2:babel` to launch the same program using babel compiler.
 Run `npm run task-1.2-streams` to launch the same program and it will use streams to read the file.
 
-## CRUD API (Task 2)
+## Homework 2 - CRUD API
 ### Tasks 2.1 and 2.2
 A simple REST service with `CRUD` operations for `User` entity.
 
@@ -35,3 +35,15 @@ Delete user: `/api/users/:userId`
 - user’s age must be between 4 and 130
 - login, password and age are required when creating a user
 - user id cannot be changed
+
+## Homework 3 - ORM
+### Tasks 3.1 and 3.2
+
+#### Database configuration
+Required environment variables are located in `.env.example` file.
+
+#### Populate DB with users
+Run `npm run users:seed` to populate the database with initial user data.
+
+Run `npm start` to launch the application.
+
