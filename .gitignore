@@ -3,5 +3,4 @@ core/txt
 .vscode
 .idea
 .env
-src/**/*.js
 dist/
