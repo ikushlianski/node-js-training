@@ -23,8 +23,7 @@ export const validateCreateUser = (
     login: LOGIN_RULES.required(),
     password: PASSWORD_RULES.required(),
     age: AGE_RULES.required(),
-    is_deleted: IS_DELETED_RULES,
-  });
+  }).allow('login', 'password', 'age');
 
   const { error } = schema.validate(req.body);
 
@@ -49,7 +48,7 @@ export const validateUpdateUser = (
     password: PASSWORD_RULES,
     age: AGE_RULES,
     isDeleted: IS_DELETED_RULES,
-  });
+  }).allow('login', 'password', 'age', 'isDeleted');
 
   const validation = schema.validate(req.body);
 

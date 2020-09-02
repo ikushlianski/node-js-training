@@ -36,7 +36,7 @@ class UserService {
   }
 
   async update(userDto: Partial<UserInterface>, userId: string) {
-    const { login, password, age } = userDto;
+    const { login, password, age, isDeleted } = userDto;
     const userToUpdate = await UserModel.findOne({
       where: {
         id: userId,
@@ -47,6 +47,9 @@ class UserService {
       if (login) userToUpdate.login = login;
       if (password) userToUpdate.password = password;
       if (age) userToUpdate.age = age;
+      if (isDeleted === true || isDeleted === false) {
+        userToUpdate.is_deleted = isDeleted;
+      }
 
       await userToUpdate.save();
 
