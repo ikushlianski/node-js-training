@@ -1,3 +1,1 @@
-export enum TableNames {
-  USERS = 'users'
-}
+export * from './table-names.enum';

@@ -4,6 +4,7 @@ import querystring from 'querystring';
 
 import { userService } from './user.service';
 import { ErrorCodes } from '../../errors';
+import { SuccessResponses } from '../../constants';
 
 const DEFAULT_LIST_LENGTH = 10;
 
@@ -66,7 +67,7 @@ export async function createUser(
   try {
     const createdUser = await userService.create(userData);
 
-    return res.status(201).send(createdUser);
+    return res.status(SuccessResponses.Created).send(createdUser);
   } catch (e) {
     return res.status(ErrorCodes.BadRequest).send(e.message);
   }
@@ -82,7 +83,7 @@ export async function updateUser(
   const updatedUser = await userService.update(fieldsToUpdate, userId);
 
   if (!updatedUser) {
-    return res.status(404).send('User does not exist');
+    return res.status(ErrorCodes.NotFound).send('User does not exist');
   }
 
   return res.send(updatedUser);
@@ -97,7 +98,7 @@ export async function softDeleteUser(
   const deletedUser = await userService.softDelete(userId);
 
   if (!deletedUser) {
-    return res.status(404).send('User does not exist');
+    return res.status(ErrorCodes.NotFound).send('User does not exist');
   }
 
   return res.send(`Deleted user ${userId}`);

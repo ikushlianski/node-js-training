@@ -18,7 +18,7 @@ export const validateCreateUser = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): void | Response => {
   const schema = Joi.object({
     login: LOGIN_RULES.required(),
     password: PASSWORD_RULES.required(),
@@ -39,7 +39,7 @@ export const validateUpdateUser = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): void | Response => {
   if (req.body.id) {
     return res.status(ErrorCodes.BadRequest).send('User id cannot be changed');
   }

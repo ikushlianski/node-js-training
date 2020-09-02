@@ -1,6 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelizeConnection } from '../connection';
-import { TableNames } from '../constants';
+import { TableNames } from '../constants/table-names.enum';
 
 export class UserModel extends Model {
   public id!: string;

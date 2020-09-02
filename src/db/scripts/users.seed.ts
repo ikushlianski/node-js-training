@@ -1,5 +1,5 @@
 import { sequelizeConnection } from '../connection';
-import { TableNames } from '../constants';
+import { TableNames } from '../constants/table-names.enum';
 
 sequelizeConnection
   .sync({ force: process.env.SEQUELIZE_FORCE_SYNC === 'true' })

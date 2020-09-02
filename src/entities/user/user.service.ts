@@ -1,5 +1,4 @@
 import { UserDto, UserInterface } from './user.interface';
-import { mockUserData } from '../../db';
 import { UserModel } from '../../db/models';
 import { v4 as uuidv4 } from 'uuid';
 import { Op } from 'sequelize';
