@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
-import { ErrorCodes } from '../../errors/errors.enum';
+import { ErrorCodes } from '../../errors';
 
 const LOGIN_RULES = Joi.string().max(30);
 
@@ -18,13 +18,12 @@ export const validateCreateUser = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): void | Response => {
   const schema = Joi.object({
     login: LOGIN_RULES.required(),
     password: PASSWORD_RULES.required(),
     age: AGE_RULES.required(),
-    isDeleted: IS_DELETED_RULES,
-  });
+  }).allow('login', 'password', 'age');
 
   const { error } = schema.validate(req.body);
 
@@ -39,7 +38,7 @@ export const validateUpdateUser = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): void | Response => {
   if (req.body.id) {
     return res.status(ErrorCodes.BadRequest).send('User id cannot be changed');
   }
@@ -49,7 +48,7 @@ export const validateUpdateUser = (
     password: PASSWORD_RULES,
     age: AGE_RULES,
     isDeleted: IS_DELETED_RULES,
-  });
+  }).allow('login', 'password', 'age', 'isDeleted');
 
   const validation = schema.validate(req.body);
 

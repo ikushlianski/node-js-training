@@ -3,11 +3,15 @@ import url from 'url';
 import querystring from 'querystring';
 
 import { userService } from './user.service';
-import { ErrorCodes } from '../../errors/errors.enum';
+import { ErrorCodes } from '../../errors';
+import { SuccessResponses } from '../../constants';
 
 const DEFAULT_LIST_LENGTH = 10;
 
-export function getUserSuggestions(req: Request, res: Response): Response {
+export async function getUserSuggestions(
+  req: Request,
+  res: Response,
+): Promise<Response> {
   const { query } = url.parse(req.url);
 
   if (!query) {
@@ -22,7 +26,7 @@ export function getUserSuggestions(req: Request, res: Response): Response {
       : Number(limit);
 
     // we assume only one user can be checked at a time
-    const autoSuggestList = userService.suggest(
+    const autoSuggestList = await userService.suggest(
       username as string,
       parsedLimit,
     );
@@ -33,7 +37,10 @@ export function getUserSuggestions(req: Request, res: Response): Response {
   return res.sendStatus(ErrorCodes.BadRequest);
 }
 
-export function getUserById(req: Request, res: Response): Response {
+export async function getUserById(
+  req: Request,
+  res: Response,
+): Promise<Response> {
   const { userId } = req.params;
 
   if (!userId) {
@@ -42,7 +49,7 @@ export function getUserById(req: Request, res: Response): Response {
       .send('User id is not present in the request');
   }
 
-  const user = userService.getById(userId);
+  const user = await userService.getById(userId);
 
   if (!user) {
     return res.send([]);
@@ -51,38 +58,47 @@ export function getUserById(req: Request, res: Response): Response {
   return res.send(user);
 }
 
-export function createUser(req: Request, res: Response): Response {
+export async function createUser(
+  req: Request,
+  res: Response,
+): Promise<Response> {
   const userData = req.body;
 
   try {
-    const createdUser = userService.create(userData);
+    const createdUser = await userService.create(userData);
 
-    return res.status(201).send(createdUser);
+    return res.status(SuccessResponses.Created).send(createdUser);
   } catch (e) {
     return res.status(ErrorCodes.BadRequest).send(e.message);
   }
 }
 
-export function updateUser(req: Request, res: Response): Response {
+export async function updateUser(
+  req: Request,
+  res: Response,
+): Promise<Response> {
   const { userId } = req.params;
   const fieldsToUpdate = req.body;
 
-  const updatedUser = userService.update(fieldsToUpdate, userId);
+  const updatedUser = await userService.update(fieldsToUpdate, userId);
 
   if (!updatedUser) {
-    return res.status(404).send('User does not exist');
+    return res.status(ErrorCodes.NotFound).send('User does not exist');
   }
 
   return res.send(updatedUser);
 }
 
-export function softDeleteUser(req: Request, res: Response): Response {
+export async function softDeleteUser(
+  req: Request,
+  res: Response,
+): Promise<Response> {
   const { userId } = req.params;
 
-  const deletedUser = userService.softDelete(userId);
+  const deletedUser = await userService.softDelete(userId);
 
   if (!deletedUser) {
-    return res.status(404).send('User does not exist');
+    return res.status(ErrorCodes.NotFound).send('User does not exist');
   }
 
   return res.send(`Deleted user ${userId}`);

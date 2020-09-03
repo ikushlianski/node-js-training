@@ -1,11 +1,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
 
-import { expressErrorHandler } from './errors/error.handler';
-import {userController} from "./entities/user/user.route";
+import { expressErrorHandler } from './errors';
+import { userController } from './entities/user';
+import { sequelizeConnection } from './db';
 
 dotenv.config();
 
+const PORT = process.env.PORT;
 const app = express();
 const appRouter = express.Router();
 
@@ -15,6 +17,10 @@ app.use(appRouter);
 
 app.use(expressErrorHandler);
 
-app.listen(process.env.PORT, () => {
-  console.log(`listening on port ${process.env.PORT}`);
-});
+sequelizeConnection
+  .sync({ force: process.env.SEQUELIZE_FORCE_SYNC === 'true' })
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  });
