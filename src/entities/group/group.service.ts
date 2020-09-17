@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { GroupModel, UserModel } from '../../db/models';
-import { GroupDto } from './group.interface';
+import { GroupModel } from '../../db/models';
+import { GroupDto, GroupInterface } from './group.interface';
 
 class GroupService {
   async getById(groupId: string) {
@@ -9,7 +9,7 @@ class GroupService {
   }
 
   async getAll(limit: number) {
-    return await UserModel.findAll({
+    return await GroupModel.findAll({
       limit,
     });
   }
@@ -27,47 +27,33 @@ class GroupService {
     return newGroup;
   }
 
-  // async update(userDto: Partial<UserInterface>, userId: string) {
-  //   const { login, password, age, isDeleted } = userDto;
-  //   const userToUpdate = await UserModel.findOne({
-  //     where: {
-  //       id: userId,
-  //     },
-  //   });
-  //
-  //   if (userToUpdate) {
-  //     if (login) userToUpdate.login = login;
-  //     if (password) userToUpdate.password = password;
-  //     if (age) userToUpdate.age = age;
-  //     if (isDeleted === true || isDeleted === false) {
-  //       userToUpdate.is_deleted = isDeleted;
-  //     }
-  //
-  //     await userToUpdate.save();
-  //
-  //     return userToUpdate;
-  //   } else {
-  //     return null;
-  //   }
-  // }
-  //
-  // async deleteOne(userId: string) {
-  //   const userToSoftDelete = await UserModel.findOne({
-  //     where: {
-  //       id: userId,
-  //     },
-  //   });
-  //
-  //   if (userToSoftDelete) {
-  //     userToSoftDelete.is_deleted = true;
-  //
-  //     await userToSoftDelete.save();
-  //
-  //     return userToSoftDelete;
-  //   } else {
-  //     return null;
-  //   }
-  // }
+  async update(groupDto: Partial<GroupInterface>, groupId: string) {
+    const { name, permissions } = groupDto;
+    const groupToUpdate = await GroupModel.findOne({
+      where: {
+        id: groupId,
+      },
+    });
+
+    if (groupToUpdate) {
+      if (name) groupToUpdate.name = name;
+      if (permissions) groupToUpdate.permissions = permissions;
+
+      await groupToUpdate.save();
+
+      return groupToUpdate;
+    } else {
+      return null;
+    }
+  }
+
+  async delete(groupId: string) {
+    return await GroupModel.destroy({
+      where: {
+        id: groupId,
+      },
+    });
+  }
 }
 
 export const groupService = new GroupService();

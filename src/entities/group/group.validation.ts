@@ -31,7 +31,7 @@ export const validateUpdateGroup = (
   next: NextFunction,
 ): void | Response => {
   const schema = Joi.object({
-    name: NAME_RULES.required(),
+    name: NAME_RULES,
     permissions: PERMISSION_RULES,
   }).allow('name', 'permissions');
 

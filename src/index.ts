@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 import { expressErrorHandler } from './errors';
 import { userController } from './entities/user';
-import { groupController } from './entities/group/group.route';
+import { groupController } from './entities/group';
 import { sequelizeConnection } from './db';
 
 dotenv.config();

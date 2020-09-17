@@ -1,5 +1,11 @@
 import express from 'express';
-import { createGroup, getGroupById, getGroups } from './group.controller';
+import {
+  createGroup,
+  deleteOne,
+  getGroupById,
+  getGroups,
+  updateGroup,
+} from './group.controller';
 import { validateCreateGroup, validateUpdateGroup } from './group.validation';
 
 export const groupController = express.Router();
@@ -12,5 +18,5 @@ groupController
 groupController
   .route('/groups/:groupId')
   .get(getGroupById)
-  .patch([validateUpdateGroup])
-  .delete();
+  .patch([validateUpdateGroup, updateGroup])
+  .delete(deleteOne);

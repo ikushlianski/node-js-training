@@ -26,6 +26,7 @@ export async function getGroups(
   try {
     const groups = await groupService.getAll(parsedLimit);
 
+    console.log({ groups });
     if (!groups) {
       return res.send([]);
     }
@@ -76,29 +77,37 @@ export async function updateGroup(
   req: Request,
   res: Response,
 ): Promise<Response> {
-  const { userId } = req.params;
+  const { groupId } = req.params;
   const fieldsToUpdate = req.body;
 
-  const updatedUser = await userService.update(fieldsToUpdate, userId);
+  try {
+    const updatedGroup = await groupService.update(fieldsToUpdate, groupId);
 
-  if (!updatedUser) {
-    return res.status(ErrorCodes.NotFound).send('User does not exist');
+    if (!updatedGroup) {
+      return res.status(ErrorCodes.NotFound).send('Group does not exist');
+    }
+
+    return res.send(updatedGroup);
+  } catch (e) {
+    return res.sendStatus(ErrorCodes.InternalServerError);
   }
-
-  return res.send(updatedUser);
 }
 
-export async function deleteGroup(
+export async function deleteOne(
   req: Request,
   res: Response,
 ): Promise<Response> {
-  const { userId } = req.params;
+  const { groupId } = req.params;
 
-  const deletedUser = await userService.softDelete(userId);
+  try {
+    const deletedGroup = await groupService.delete(groupId);
 
-  if (!deletedUser) {
-    return res.status(ErrorCodes.NotFound).send('User does not exist');
+    if (!deletedGroup) {
+      return res.status(ErrorCodes.NotFound).send('Group does not exist');
+    }
+
+    return res.send(`Deleted group ${groupId}`);
+  } catch (e) {
+    return res.sendStatus(ErrorCodes.InternalServerError);
   }
-
-  return res.send(`Deleted user ${userId}`);
 }
