@@ -1,6 +1,6 @@
-import { Model, DataTypes } from 'sequelize';
-import { sequelizeConnection } from '../connection';
+import { DataTypes, Model } from 'sequelize';
 import { TableNames } from '../constants';
+import { sequelizeConnection } from '../connection';
 
 export class UserModel extends Model {
   public id!: string;
@@ -10,34 +10,34 @@ export class UserModel extends Model {
   public is_deleted?: boolean;
 }
 
-UserModel.init(
-  {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-    },
-    login: {
-      type: new DataTypes.STRING(255),
-      allowNull: false,
-    },
-    password: {
-      type: new DataTypes.STRING(255),
-      allowNull: false,
-    },
-    age: {
-      type: new DataTypes.INTEGER(),
-      allowNull: false,
-    },
-    is_deleted: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: false,
-    },
+export const userModelAttributes = {
+  id: {
+    type: DataTypes.UUID,
+    primaryKey: true,
   },
-  {
-    tableName: TableNames.USERS,
-    sequelize: sequelizeConnection,
-    freezeTableName: true,
-    timestamps: false,
+  login: {
+    type: new DataTypes.STRING(255),
+    allowNull: false,
   },
-);
+  password: {
+    type: new DataTypes.STRING(255),
+    allowNull: false,
+  },
+  age: {
+    type: new DataTypes.INTEGER(),
+    allowNull: false,
+  },
+  is_deleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false,
+  },
+};
+
+export const userModelOptions = {
+  tableName: TableNames.USERS,
+  sequelize: sequelizeConnection,
+  freezeTableName: true,
+  timestamps: false,
+  modelName: 'User',
+};

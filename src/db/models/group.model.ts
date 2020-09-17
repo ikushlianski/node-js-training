@@ -1,7 +1,6 @@
-import { Model, DataTypes } from 'sequelize';
-
-import { sequelizeConnection } from '../connection';
+import { DataTypes, Model } from 'sequelize';
 import { TableNames } from '../constants';
+import { sequelizeConnection } from '../connection';
 import { GroupPermission } from '../../entities/group';
 
 export class GroupModel extends Model {
@@ -10,25 +9,25 @@ export class GroupModel extends Model {
   public permissions!: GroupPermission[];
 }
 
-GroupModel.init(
-  {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-    },
-    name: {
-      type: new DataTypes.STRING(255),
-      allowNull: false,
-    },
-    permissions: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: true,
-    },
+export const groupModelAttributes = {
+  id: {
+    type: DataTypes.UUID,
+    primaryKey: true,
   },
-  {
-    tableName: TableNames.GROUPS,
-    sequelize: sequelizeConnection,
-    freezeTableName: true,
-    timestamps: false,
+  name: {
+    type: new DataTypes.STRING(255),
+    allowNull: false,
   },
-);
+  permissions: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    allowNull: true,
+  },
+};
+
+export const groupModelOptions = {
+  tableName: TableNames.GROUPS,
+  sequelize: sequelizeConnection,
+  freezeTableName: true,
+  timestamps: false,
+  modelName: 'Group',
+};
