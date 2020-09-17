@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { GroupModel } from '../../db/models';
+import { GroupModel, UserGroupModel } from '../../db/models';
 import { GroupDto, GroupInterface } from './group.interface';
+import { sequelizeConnection } from '../../db';
 
 class GroupService {
   async getById(groupId: string) {
@@ -52,6 +53,16 @@ class GroupService {
       where: {
         id: groupId,
       },
+    });
+  }
+
+  async addUsersToGroup(groupId: string, userIds: string[]) {
+    return await sequelizeConnection.transaction(async (t) => {
+      const addedUsers = userIds.map((userId) => {
+        return UserGroupModel.create({ groupId, userId }, { transaction: t });
+      });
+
+      await Promise.all(addedUsers);
     });
   }
 }

@@ -39,5 +39,4 @@ export const userModelOptions = {
   sequelize: sequelizeConnection,
   freezeTableName: true,
   timestamps: false,
-  modelName: 'User',
 };

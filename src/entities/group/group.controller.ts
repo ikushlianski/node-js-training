@@ -111,3 +111,20 @@ export async function deleteOne(
     return res.sendStatus(ErrorCodes.InternalServerError);
   }
 }
+
+export async function addUsersToGroup(
+  req: Request,
+  res: Response,
+): Promise<Response> {
+  const { groupId, userIds } = req.body;
+
+  try {
+    await groupService.addUsersToGroup(groupId, userIds);
+
+    return res.send('Users added');
+  } catch (e) {
+    console.error('e', e);
+
+    return res.sendStatus(ErrorCodes.InternalServerError);
+  }
+}

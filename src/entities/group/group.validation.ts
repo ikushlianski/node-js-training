@@ -43,3 +43,22 @@ export const validateUpdateGroup = (
 
   return next();
 };
+
+export const validateAddUserToGroup = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void | Response => {
+  const schema = Joi.object({
+    groupId: Joi.string().uuid(),
+    userIds: Joi.array().items(Joi.string().uuid()),
+  }).allow('groupId', 'userIds');
+
+  const validation = schema.validate(req.body);
+
+  if (validation.error) {
+    return res.status(ErrorCodes.BadRequest).send(validation.error.message);
+  }
+
+  return next();
+};

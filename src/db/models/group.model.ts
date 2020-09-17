@@ -29,5 +29,4 @@ export const groupModelOptions = {
   sequelize: sequelizeConnection,
   freezeTableName: true,
   timestamps: false,
-  modelName: 'Group',
 };
