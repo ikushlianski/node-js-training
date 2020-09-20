@@ -13,6 +13,7 @@ export const groupModelAttributes = {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
+    defaultValue: DataTypes.UUIDV4,
   },
   name: {
     type: new DataTypes.STRING(255),

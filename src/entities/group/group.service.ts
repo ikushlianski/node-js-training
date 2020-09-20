@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { GroupModel, UserGroupModel } from '../../db/models';
 import { GroupDto, GroupInterface } from './group.interface';
 import { sequelizeConnection } from '../../db';
@@ -19,7 +17,6 @@ class GroupService {
     const { name, permissions } = groupData;
 
     const newGroup = new GroupModel();
-    newGroup.id = uuidv4();
     newGroup.name = name;
     newGroup.permissions = permissions;
 
@@ -36,16 +33,12 @@ class GroupService {
       },
     });
 
-    if (groupToUpdate) {
-      if (name) groupToUpdate.name = name;
-      if (permissions) groupToUpdate.permissions = permissions;
+    await groupToUpdate?.update({
+      name,
+      permissions,
+    });
 
-      await groupToUpdate.save();
-
-      return groupToUpdate;
-    } else {
-      return null;
-    }
+    return groupToUpdate;
   }
 
   async delete(groupId: string) {
