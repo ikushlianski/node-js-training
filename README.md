@@ -47,3 +47,39 @@ Run `npm run users:seed` to populate the database with initial user data.
 
 Run `npm start` to launch the application.
 
+## Homework 4 - Many to Many relations
+#### Database configuration
+Environment variables are in `.env.example` file. Set up your own `.env` file accordingly.
+Upon launch Sequelize will sync all tables in DB.
+
+Run `npm start` to launch the application.
+
+#### Endpoints
+Create group: POST `/api/groups`
+```json
+{
+	"name": "admins",
+	"permissions": ["READ", "SHARE", "WRITE"]
+}
+```
+Get all groups: GET `/api/groups`
+
+Get group by id: GET `/api/groups/:groupId`
+
+Update group: PATCH `/api/groups/:groupId`
+```json
+{
+	"name": "admins",
+	"permissions": []
+}
+```
+
+Delete group: DELETE `/api/groups/:groupId`
+
+Add users to group: POST `/api/groups/add-users`
+```json
+{
+	"groupId": "06b92047-d584-4c1f-9bb8-7987736829f2",
+	"userIds": ["1b94587f-129b-4964-b64c-93e7ca41bfd7", "2cd89c78-337d-41b1-9f5c-41d5d8fefebe"]
+}
+```
