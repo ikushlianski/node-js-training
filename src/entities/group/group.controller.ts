@@ -26,7 +26,6 @@ export async function getGroups(
   try {
     const groups = await groupService.getAll(parsedLimit);
 
-    console.log({ groups });
     if (!groups) {
       return res.send([]);
     }

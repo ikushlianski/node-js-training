@@ -22,5 +22,6 @@ export const sequelizeConnection = new Sequelize(
   {
     host: process.env.DB_HOSTNAME,
     dialect: process.env.DB_DIALECT as Dialect,
+    logging: process.env.SEQUELIZE_LOGGING === 'true',
   },
 );

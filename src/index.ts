@@ -20,7 +20,10 @@ app.use(appRouter);
 app.use(expressErrorHandler);
 
 sequelizeConnection
-  .sync({ force: process.env.SEQUELIZE_FORCE_SYNC === 'true', alter: true })
+  .sync({
+    force: process.env.SEQUELIZE_FORCE_SYNC === 'true',
+    alter: true,
+  })
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on http://${HOST}:${PORT}`);
