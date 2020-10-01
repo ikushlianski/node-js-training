@@ -1,10 +1,6 @@
-enum ConsoleMethods {
-  info = 'info',
-  warn = 'warn',
-  error = 'error',
-}
+import { LogLevels } from '../log-level.enum';
 
-export function customLogger(arg: string, method = ConsoleMethods.info): void {
+export function customLogger(arg: string, method = LogLevels.info): void {
   console[method](
     `
   [Custom logger] `,

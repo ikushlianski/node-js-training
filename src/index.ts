@@ -5,6 +5,8 @@ import { expressErrorHandler } from './errors';
 import { userController } from './entities/user';
 import { groupController } from './entities/group';
 import { sequelizeConnection } from './db';
+import { winstonLogger } from './utils/loggers';
+import { LogLevels } from './utils';
 
 dotenv.config();
 
@@ -28,4 +30,18 @@ sequelizeConnection
     app.listen(PORT, () => {
       console.log(`Server is running on http://${HOST}:${PORT}`);
     });
+  });
+
+process
+  .on('unhandledRejection', (reason) => {
+    winstonLogger(`Unhandled rejection: ${reason}`, LogLevels.error);
+  })
+  .on('uncaughtException', (err) => {
+    winstonLogger(
+      `Uncaught exception (${err.name}): ${err.message}`,
+      LogLevels.error,
+    );
+
+    // not safe to continue
+    process.exit(1);
   });

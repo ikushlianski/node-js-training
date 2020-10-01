@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import url from 'url';
 import { ErrorCodes } from '../../errors';
-import { userService } from '../user';
 import { SuccessResponses } from '../../constants';
 import * as querystring from 'querystring';
 import { groupService } from './group.service';
