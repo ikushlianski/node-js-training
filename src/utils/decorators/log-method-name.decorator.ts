@@ -7,14 +7,24 @@ export function logMethodInfo(loggerFn: (...args: any[]) => void) {
     const originalFn = descriptor.value;
 
     if (typeof originalFn === 'function') {
-      descriptor.value = function (...args: any[]) {
+      descriptor.value = async function (...args: any[]) {
         const message = `
         Method: ${name}
         Arguments: ${[...args]}
         `;
         loggerFn(message);
 
-        return originalFn.apply(this, args);
+        return new Promise(async (resolve, reject) => {
+          try {
+            console.time('execTime');
+            const result = await originalFn.apply(this, args);
+            console.timeEnd('execTime');
+
+            resolve(result);
+          } catch (e) {
+            reject(e);
+          }
+        });
       };
     }
 
