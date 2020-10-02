@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 import { expressErrorHandler } from './errors';
 import { userController } from './entities/user';
-import { groupController } from './entities/group';
+import { groupRouter } from './entities/group';
 import { sequelizeConnection } from './db';
 import { winstonLogger } from './utils/loggers';
 import { LogLevels } from './utils';
@@ -16,7 +16,7 @@ const app = express();
 const appRouter = express.Router();
 
 app.use(express.json());
-appRouter.use('/api', [userController, groupController]);
+appRouter.use('/api', [userController, groupRouter]);
 app.use(appRouter);
 
 app.use(expressErrorHandler);

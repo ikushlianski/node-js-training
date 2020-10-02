@@ -4,125 +4,119 @@ import { ErrorCodes } from '../../errors';
 import { SuccessResponses } from '../../constants';
 import * as querystring from 'querystring';
 import { groupService } from './group.service';
+import { winstonLogger } from '../../utils/loggers';
+import { logMethodInfo } from '../../utils/decorators';
 
 const DEFAULT_LIST_LENGTH = 10;
 
-export async function getGroups(
-  req: Request,
-  res: Response,
-): Promise<Response> {
-  const { query } = url.parse(req.url);
-  let limit;
+class GroupController {
+  @logMethodInfo(winstonLogger)
+  async getGroups(req: Request, res: Response): Promise<Response> {
+    const { query } = url.parse(req.url);
+    let limit;
 
-  if (query) {
-    ({ limit } = querystring.parse(query));
+    if (query) {
+      ({ limit } = querystring.parse(query));
+    }
+
+    const parsedLimit = isNaN(Number(limit))
+      ? DEFAULT_LIST_LENGTH
+      : Number(limit);
+
+    try {
+      // throw new Error('WTTTTTTTTF CONTROLLER');
+      const groups = await groupService.getAll(parsedLimit);
+
+      if (!groups) {
+        return res.send([]);
+      }
+
+      return res.send(groups);
+    } catch (e) {
+      res.sendStatus(ErrorCodes.InternalServerError);
+
+      return e;
+    }
   }
 
-  const parsedLimit = isNaN(Number(limit))
-    ? DEFAULT_LIST_LENGTH
-    : Number(limit);
+  @logMethodInfo(winstonLogger)
+  async getGroupById(req: Request, res: Response): Promise<Response> {
+    const { groupId } = req.params;
 
-  try {
-    const groups = await groupService.getAll(parsedLimit);
+    if (!groupId) {
+      return res
+        .status(ErrorCodes.BadRequest)
+        .send('Group id is not present in the request');
+    }
 
-    if (!groups) {
+    throw Error('db does not exist');
+    const group = await groupService.getById(groupId);
+
+    if (!group) {
       return res.send([]);
     }
 
-    return res.send(groups);
-  } catch (e) {
-    return res.send(ErrorCodes.InternalServerError);
-  }
-}
-
-export async function getGroupById(
-  req: Request,
-  res: Response,
-): Promise<Response> {
-  const { groupId } = req.params;
-
-  if (!groupId) {
-    return res
-      .status(ErrorCodes.BadRequest)
-      .send('Group id is not present in the request');
+    return res.send(group);
   }
 
-  const group = await groupService.getById(groupId);
+  async createGroup(req: Request, res: Response): Promise<Response> {
+    const groupData = req.body;
 
-  if (!group) {
-    return res.send([]);
-  }
+    try {
+      const createdGroup = await groupService.create(groupData);
 
-  return res.send(group);
-}
-
-export async function createGroup(
-  req: Request,
-  res: Response,
-): Promise<Response> {
-  const groupData = req.body;
-
-  try {
-    const createdGroup = await groupService.create(groupData);
-
-    return res.status(SuccessResponses.Created).send(createdGroup);
-  } catch (e) {
-    return res.status(ErrorCodes.BadRequest).send(e.message);
-  }
-}
-
-export async function updateGroup(
-  req: Request,
-  res: Response,
-): Promise<Response> {
-  const { groupId } = req.params;
-  const fieldsToUpdate = req.body;
-
-  try {
-    const updatedGroup = await groupService.update(fieldsToUpdate, groupId);
-
-    if (!updatedGroup) {
-      return res.status(ErrorCodes.NotFound).send('Group does not exist');
+      return res.status(SuccessResponses.Created).send(createdGroup);
+    } catch (e) {
+      return res.status(ErrorCodes.BadRequest).send(e.message);
     }
-
-    return res.send(updatedGroup);
-  } catch (e) {
-    return res.sendStatus(ErrorCodes.InternalServerError);
   }
-}
 
-export async function deleteOne(
-  req: Request,
-  res: Response,
-): Promise<Response> {
-  const { groupId } = req.params;
+  async updateGroup(req: Request, res: Response): Promise<Response> {
+    const { groupId } = req.params;
+    const fieldsToUpdate = req.body;
 
-  try {
-    const deletedGroup = await groupService.delete(groupId);
+    try {
+      const updatedGroup = await groupService.update(fieldsToUpdate, groupId);
 
-    if (!deletedGroup) {
-      return res.status(ErrorCodes.NotFound).send('Group does not exist');
+      if (!updatedGroup) {
+        return res.status(ErrorCodes.NotFound).send('Group does not exist');
+      }
+
+      return res.send(updatedGroup);
+    } catch (e) {
+      return res.sendStatus(ErrorCodes.InternalServerError);
     }
+  }
 
-    return res.send(`Deleted group ${groupId}`);
-  } catch (e) {
-    return res.sendStatus(ErrorCodes.InternalServerError);
+  async deleteOne(req: Request, res: Response): Promise<Response> {
+    const { groupId } = req.params;
+
+    try {
+      const deletedGroup = await groupService.delete(groupId);
+
+      if (!deletedGroup) {
+        return res.status(ErrorCodes.NotFound).send('Group does not exist');
+      }
+
+      return res.send(`Deleted group ${groupId}`);
+    } catch (e) {
+      return res.sendStatus(ErrorCodes.InternalServerError);
+    }
+  }
+
+  async addUsersToGroup(req: Request, res: Response): Promise<Response> {
+    const { groupId, userIds } = req.body;
+
+    try {
+      await groupService.addUsersToGroup(groupId, userIds);
+
+      return res.send('Users added');
+    } catch (e) {
+      console.error('e', e);
+
+      return res.sendStatus(ErrorCodes.InternalServerError);
+    }
   }
 }
 
-export async function addUsersToGroup(
-  req: Request,
-  res: Response,
-): Promise<Response> {
-  const { groupId, userIds } = req.body;
-
-  try {
-    await groupService.addUsersToGroup(groupId, userIds);
-
-    return res.send('Users added');
-  } catch (e) {
-    console.error('e', e);
-
-    return res.sendStatus(ErrorCodes.InternalServerError);
-  }
-}
+export const groupController = new GroupController();

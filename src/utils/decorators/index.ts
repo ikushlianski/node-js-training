@@ -1,1 +1,1 @@
-export * from './log-method-name.decorator';
+export * from './log-method-info.decorator';
