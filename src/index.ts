@@ -7,12 +7,15 @@ import { groupRouter } from './entities/group';
 import { sequelizeConnection } from './db';
 import { winstonLogger } from './utils/loggers';
 import { LogLevels } from './utils';
+import { loggerMiddleware } from './utils/loggers/logger.middleware';
 
 dotenv.config();
 
 const PORT = process.env.PORT;
 const HOST = process.env.HOST;
 const app = express();
+app.use(loggerMiddleware);
+
 const appRouter = express.Router();
 
 app.use(express.json());

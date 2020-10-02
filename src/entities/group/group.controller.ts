@@ -5,12 +5,11 @@ import { SuccessResponses } from '../../constants';
 import * as querystring from 'querystring';
 import { groupService } from './group.service';
 import { winstonLogger } from '../../utils/loggers';
-import { logMethodInfo } from '../../utils/decorators';
+import { LogLevels } from '../../utils';
 
 const DEFAULT_LIST_LENGTH = 10;
 
 class GroupController {
-  @logMethodInfo(winstonLogger)
   async getGroups(req: Request, res: Response): Promise<Response> {
     const { query } = url.parse(req.url);
     let limit;
@@ -24,7 +23,6 @@ class GroupController {
       : Number(limit);
 
     try {
-      // throw new Error('WTTTTTTTTF CONTROLLER');
       const groups = await groupService.getAll(parsedLimit);
 
       if (!groups) {
@@ -33,13 +31,12 @@ class GroupController {
 
       return res.send(groups);
     } catch (e) {
-      res.sendStatus(ErrorCodes.InternalServerError);
+      winstonLogger(e.message, LogLevels.error);
 
-      return e;
+      return res.sendStatus(ErrorCodes.InternalServerError);
     }
   }
 
-  @logMethodInfo(winstonLogger)
   async getGroupById(req: Request, res: Response): Promise<Response> {
     const { groupId } = req.params;
 
@@ -49,14 +46,19 @@ class GroupController {
         .send('Group id is not present in the request');
     }
 
-    throw Error('db does not exist');
-    const group = await groupService.getById(groupId);
+    try {
+      const group = await groupService.getById(groupId);
 
-    if (!group) {
-      return res.send([]);
+      if (!group) {
+        return res.send([]);
+      }
+
+      return res.send(group);
+    } catch (e) {
+      winstonLogger(e.message, LogLevels.error);
+
+      return res.sendStatus(ErrorCodes.InternalServerError);
     }
-
-    return res.send(group);
   }
 
   async createGroup(req: Request, res: Response): Promise<Response> {
@@ -67,6 +69,8 @@ class GroupController {
 
       return res.status(SuccessResponses.Created).send(createdGroup);
     } catch (e) {
+      winstonLogger(e.message, LogLevels.error);
+
       return res.status(ErrorCodes.BadRequest).send(e.message);
     }
   }
@@ -84,6 +88,8 @@ class GroupController {
 
       return res.send(updatedGroup);
     } catch (e) {
+      winstonLogger(e.message, LogLevels.error);
+
       return res.sendStatus(ErrorCodes.InternalServerError);
     }
   }
@@ -100,6 +106,8 @@ class GroupController {
 
       return res.send(`Deleted group ${groupId}`);
     } catch (e) {
+      winstonLogger(e.message, LogLevels.error);
+
       return res.sendStatus(ErrorCodes.InternalServerError);
     }
   }
@@ -112,7 +120,7 @@ class GroupController {
 
       return res.send('Users added');
     } catch (e) {
-      console.error('e', e);
+      winstonLogger(e.message, LogLevels.error);
 
       return res.sendStatus(ErrorCodes.InternalServerError);
     }

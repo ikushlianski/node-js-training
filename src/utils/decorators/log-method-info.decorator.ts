@@ -1,42 +1,32 @@
-import { LogLevels } from '../log-level.enum';
-
 type LogMethodInfo = (loggerFn: (...args: any[]) => void) => any;
 
 export const logMethodInfo: LogMethodInfo = (loggerFn) => {
   return function (
     target: any,
-    name: string,
+    methodName: string,
     descriptor: PropertyDescriptor,
-  ): any {
+  ): PropertyDescriptor {
     const originalFn = descriptor.value;
 
     if (typeof originalFn === 'function') {
       descriptor.value = async function (...args: any[]) {
         const message = `
-        Method: ${name}
-        Arguments: ${[...args]}
+        Method: ${methodName}
+        Arguments: ${args.map((arg) => JSON.stringify(arg))}
         `;
         loggerFn(message);
 
         return new Promise(async (resolve, reject) => {
-          console.time(`execTime for ${name}`);
-          let result;
-
           try {
-            result = await originalFn.apply(this, args);
+            console.time(`Execution time for ${methodName}`);
 
-            if (result instanceof Error) {
-              throw result;
-            }
+            const result = await originalFn.apply(this, args);
 
             resolve(result);
           } catch (e) {
-            loggerFn(`Method: ${name}. Error: ${e.message}`, LogLevels.error);
-
-            return resolve(e);
+            reject(e);
           } finally {
-            console.timeEnd(`execTime for ${name}`);
-            resolve(result);
+            console.timeEnd(`Execution time for ${methodName}`);
           }
         });
       };
