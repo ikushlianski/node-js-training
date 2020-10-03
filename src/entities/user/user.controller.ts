@@ -5,6 +5,8 @@ import querystring from 'querystring';
 import { userService } from './user.service';
 import { ErrorCodes } from '../../errors';
 import { SuccessResponses } from '../../constants';
+import { winstonLogger } from '../../utils/loggers';
+import { LogLevels } from '../../utils';
 
 const DEFAULT_LIST_LENGTH = 10;
 
@@ -20,21 +22,27 @@ export async function getUserSuggestions(
 
   const { limit, username } = querystring.parse(query);
 
-  if (username) {
-    const parsedLimit = isNaN(Number(limit))
-      ? DEFAULT_LIST_LENGTH
-      : Number(limit);
+  try {
+    if (username) {
+      const parsedLimit = isNaN(Number(limit))
+        ? DEFAULT_LIST_LENGTH
+        : Number(limit);
 
-    // we assume only one user can be checked at a time
-    const autoSuggestList = await userService.suggest(
-      username as string,
-      parsedLimit,
-    );
+      // we assume only one user can be checked at a time
+      const autoSuggestList = await userService.suggest(
+        username as string,
+        parsedLimit,
+      );
 
-    return res.send(autoSuggestList);
+      return res.send(autoSuggestList);
+    }
+
+    return res.sendStatus(ErrorCodes.BadRequest);
+  } catch (e) {
+    winstonLogger(e.message, LogLevels.error);
+
+    return res.status(ErrorCodes.InternalServerError).send(e.message);
   }
-
-  return res.sendStatus(ErrorCodes.BadRequest);
 }
 
 export async function getUserById(
@@ -49,13 +57,19 @@ export async function getUserById(
       .send('User id is not present in the request');
   }
 
-  const user = await userService.getById(userId);
+  try {
+    const user = await userService.getById(userId);
 
-  if (!user) {
-    return res.send([]);
+    if (!user) {
+      return res.send([]);
+    }
+
+    return res.send(user);
+  } catch (e) {
+    winstonLogger(e.message, LogLevels.error);
+
+    return res.status(ErrorCodes.InternalServerError).send(e.message);
   }
-
-  return res.send(user);
 }
 
 export async function createUser(
@@ -69,7 +83,9 @@ export async function createUser(
 
     return res.status(SuccessResponses.Created).send(createdUser);
   } catch (e) {
-    return res.status(ErrorCodes.BadRequest).send(e.message);
+    winstonLogger(e.message, LogLevels.error);
+
+    return res.status(ErrorCodes.InternalServerError).send(e.message);
   }
 }
 
@@ -80,13 +96,19 @@ export async function updateUser(
   const { userId } = req.params;
   const fieldsToUpdate = req.body;
 
-  const updatedUser = await userService.update(fieldsToUpdate, userId);
+  try {
+    const updatedUser = await userService.update(fieldsToUpdate, userId);
 
-  if (!updatedUser) {
-    return res.status(ErrorCodes.NotFound).send('User does not exist');
+    if (!updatedUser) {
+      return res.status(ErrorCodes.NotFound).send('User does not exist');
+    }
+
+    return res.send(updatedUser);
+  } catch (e) {
+    winstonLogger(e.message, LogLevels.error);
+
+    return res.status(ErrorCodes.InternalServerError).send(e.message);
   }
-
-  return res.send(updatedUser);
 }
 
 export async function softDeleteUser(
@@ -95,11 +117,17 @@ export async function softDeleteUser(
 ): Promise<Response> {
   const { userId } = req.params;
 
-  const deletedUser = await userService.softDelete(userId);
+  try {
+    const deletedUser = await userService.softDelete(userId);
 
-  if (!deletedUser) {
-    return res.status(ErrorCodes.NotFound).send('User does not exist');
+    if (!deletedUser) {
+      return res.status(ErrorCodes.NotFound).send('User does not exist');
+    }
+
+    return res.send(`Deleted user ${userId}`);
+  } catch (e) {
+    winstonLogger(e.message, LogLevels.error);
+
+    return res.status(ErrorCodes.InternalServerError).send(e.message);
   }
-
-  return res.send(`Deleted user ${userId}`);
 }

@@ -1,31 +1,24 @@
 import express from 'express';
-import {
-  addUsersToGroup,
-  createGroup,
-  deleteOne,
-  getGroupById,
-  getGroups,
-  updateGroup,
-} from './group.controller';
+import { groupController as groups } from './group.controller';
 import {
   validateAddUserToGroup,
   validateCreateGroup,
   validateUpdateGroup,
 } from './group.validation';
 
-export const groupController = express.Router();
+export const groupRouter = express.Router();
 
-groupController
+groupRouter
   .route('/groups')
-  .get(getGroups)
-  .post([validateCreateGroup, createGroup]);
+  .get(groups.getGroups)
+  .post([validateCreateGroup, groups.createGroup]);
 
-groupController
+groupRouter
   .route('/groups/:groupId')
-  .get(getGroupById)
-  .patch([validateUpdateGroup, updateGroup])
-  .delete(deleteOne);
+  .get(groups.getGroupById)
+  .patch([validateUpdateGroup, groups.updateGroup])
+  .delete(groups.deleteOne);
 
-groupController
+groupRouter
   .route('/groups/add-users')
-  .post([validateAddUserToGroup, addUsersToGroup]);
+  .post([validateAddUserToGroup, groups.addUsersToGroup]);

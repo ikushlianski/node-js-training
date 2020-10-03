@@ -2,12 +2,16 @@ import { UserDto, UserInterface } from './user.interface';
 import { UserModel } from '../../db/models';
 import { v4 as uuidv4 } from 'uuid';
 import { Op } from 'sequelize';
+import { logMethodInfo } from '../../utils/decorators';
+import { winstonLogger } from '../../utils/loggers';
 
 class UserService {
+  @logMethodInfo(winstonLogger)
   async getById(userId: string) {
     return await UserModel.findByPk(userId);
   }
 
+  @logMethodInfo(winstonLogger)
   async suggest(loginSubstring: string, limit: number) {
     const suggestions = await UserModel.findAll({
       where: {
@@ -21,6 +25,7 @@ class UserService {
     return suggestions.sort((a, b) => a.login.localeCompare(b.login));
   }
 
+  @logMethodInfo(winstonLogger)
   async create(userData: UserDto): Promise<UserModel> {
     const { login, password, age } = userData;
 
@@ -35,6 +40,7 @@ class UserService {
     return newUser;
   }
 
+  @logMethodInfo(winstonLogger)
   async update(userDto: Partial<UserInterface>, userId: string) {
     const { login, password, age, isDeleted } = userDto;
     const userToUpdate = await UserModel.findOne({
@@ -59,6 +65,7 @@ class UserService {
     }
   }
 
+  @logMethodInfo(winstonLogger)
   async softDelete(userId: string) {
     const userToSoftDelete = await UserModel.findOne({
       where: {

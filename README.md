@@ -83,3 +83,10 @@ Add users to group: POST `/api/groups/add-users`
 	"userIds": ["1b94587f-129b-4964-b64c-93e7ca41bfd7", "2cd89c78-337d-41b1-9f5c-41d5d8fefebe"]
 }
 ```
+
+## Homework 5 - Logging
+There's a middleware that logs all HTTP methods and urls that our controllers receive.
+
+Arguments and execution time of service methods inside controllers is tracked with decorators inside which I use a Winston logger.
+
+Also, I listen to uncaught exceptions (the app is terminated in this case) and unhandled rejections.
