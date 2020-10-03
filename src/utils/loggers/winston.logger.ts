@@ -1,5 +1,6 @@
 import { createLogger, format, transports } from 'winston';
 import { LogLevels } from '../log-level.enum';
+import { stripUserData } from '../sanitize-user-data.util';
 
 const { combine, timestamp, label, printf } = format;
 
@@ -13,8 +14,10 @@ const logger = createLogger({
 });
 
 export function winstonLogger(message: string, level = LogLevels.info): void {
+  const sanitizedMessage = stripUserData(message);
+
   logger.log({
     level,
-    message,
+    message: sanitizedMessage,
   });
 }
