@@ -2,12 +2,14 @@ import express from 'express';
 import dotenv from 'dotenv';
 
 import { expressErrorHandler } from './errors';
-import { userController } from './entities/user';
+import { userRouter } from './entities/user';
 import { groupRouter } from './entities/group';
 import { sequelizeConnection } from './db';
 import { winstonLogger } from './utils/loggers';
 import { LogLevels } from './utils';
 import { loggerMiddleware } from './utils/loggers/logger.middleware';
+import { authMiddleware } from './auth/auth.middleware';
+import { authRouter } from './auth/auth.route';
 
 dotenv.config();
 
@@ -19,7 +21,8 @@ app.use(loggerMiddleware);
 const appRouter = express.Router();
 
 app.use(express.json());
-appRouter.use('/api', [userController, groupRouter]);
+appRouter.use('/api', authMiddleware, [userRouter, groupRouter]);
+appRouter.use('/auth', [authRouter]);
 app.use(appRouter);
 
 app.use(expressErrorHandler);

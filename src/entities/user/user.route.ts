@@ -9,13 +9,13 @@ import {
   updateUser,
 } from './user.controller';
 
-export const userController = express.Router();
+export const userRouter = express.Router();
 
-userController.route('/users/suggest').get(getUserSuggestions);
+userRouter.route('/users/suggest').get(getUserSuggestions);
 
-userController.route('/users').post([validateCreateUser, createUser]);
+userRouter.route('/users').post([validateCreateUser, createUser]);
 
-userController
+userRouter
   .route('/users/:userId')
   .get(getUserById)
   .patch([validateUpdateUser, updateUser])
