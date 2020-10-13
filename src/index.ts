@@ -8,8 +8,7 @@ import { sequelizeConnection } from './db';
 import { winstonLogger } from './utils/loggers';
 import { LogLevels } from './utils';
 import { loggerMiddleware } from './utils/loggers/logger.middleware';
-import { authMiddleware } from './auth/auth.middleware';
-import { authRouter } from './auth/auth.route';
+import { authMiddleware, authRouter } from './auth';
 
 dotenv.config();
 
