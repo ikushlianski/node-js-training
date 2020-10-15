@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 import { expressErrorHandler } from './errors';
 import { userRouter } from './entities/user';
@@ -14,12 +15,22 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 const HOST = process.env.HOST;
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : [];
+
 const app = express();
 app.use(loggerMiddleware);
 
+app.use(express.json());
+app.use(
+  cors({
+    origin: allowedOrigins,
+  }),
+);
+
 const appRouter = express.Router();
 
-app.use(express.json());
 appRouter.use('/api', authMiddleware, [userRouter, groupRouter]);
 appRouter.use('/auth', [authRouter]);
 app.use(appRouter);
