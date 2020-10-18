@@ -8,6 +8,7 @@ export class UserModel extends Model {
   public password!: string;
   public age!: number;
   public is_deleted?: boolean;
+  public refresh_token?: boolean;
 }
 
 export const userModelAttributes = {
@@ -31,6 +32,10 @@ export const userModelAttributes = {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
     allowNull: false,
+  },
+  refresh_token: {
+    type: new DataTypes.STRING(500),
+    allowNull: true,
   },
 };
 
