@@ -1,6 +1,15 @@
 node_modules
 core/txt
+
+# IDEs
 .vscode
 .idea
+
+# environment
 .env
+
+# builds
 dist/
+
+# tests
+coverage

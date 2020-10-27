@@ -10,9 +10,10 @@
     "task-1.2:babel": "nodemon --exec babel-node core/task-1.2-read-entire-file-babel.js",
     "task-1.2-streams": "nodemon core/task-1.2-use-streams.js",
     "task-1.2-streams:babel": "nodemon --exec babel-node core/task-1.2-use-streams-babel.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --silent",
     "start": "nodemon --exec ts-node src/index.ts",
     "compile": "rm -rf dist && mkdir dist && tsc",
+    "coverage": "jest --coverage",
     "users:seed": "ts-node ./src/db/scripts/users.seed.ts"
   },
   "repository": {
@@ -41,7 +42,7 @@
     "eslint": "7.5.0",
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-prettier": "3.1.4",
-    "jest": "26.6.1",
+    "jest": "25.5.4",
     "nodemon": "2.0.4",
     "prettier": "2.0.5",
     "ts-jest": "26.4.2",
