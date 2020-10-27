@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import url from 'url';
+import * as querystring from 'querystring';
+
+import { groupService } from './group.service';
+
 import { ErrorCodes } from '../../errors';
 import { SuccessResponses } from '../../constants';
-import * as querystring from 'querystring';
-import { groupService } from './group.service';
 import { winstonLogger } from '../../utils/loggers';
 import { LogLevels } from '../../utils';
 

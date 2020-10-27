@@ -6,8 +6,6 @@ import { logMethodInfo, winstonLogger } from '../../utils';
 class GroupService {
   @logMethodInfo(winstonLogger)
   async getById(groupId: string) {
-    throw Error('oooh');
-
     return await GroupModel.findByPk(groupId);
   }
 
