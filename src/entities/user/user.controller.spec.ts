@@ -252,6 +252,9 @@ describe('User Controller', () => {
       await softDeleteUser(req, res);
 
       expect(userService.softDelete).toHaveBeenCalledWith('1');
+      expect(res.send).toHaveBeenCalledWith(
+        `Deleted user ${req.params.userId}`,
+      );
     });
 
     it('should return 404 if user to delete was not in DB', async () => {

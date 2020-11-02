@@ -27,7 +27,7 @@ describe('Group Controller', () => {
 
   describe('getGroups', () => {
     it('should call group service with custom limit if it is in query params', async () => {
-      req.url = 'http://localhost:3000/api/users?limit=2';
+      req.url = 'http://localhost:3000/api/groups?limit=2';
 
       jest
         .spyOn(groupService, 'getAll')
@@ -103,13 +103,14 @@ describe('Group Controller', () => {
 
       const group = new GroupModel();
 
-      jest
+      const getByIdSpy = jest
         .spyOn(groupService, 'getById')
         .mockImplementation(() => Promise.resolve(group));
 
       await groupController.getGroupById(req, res);
 
       expect(res.send).toHaveBeenCalledWith(group);
+      expect(getByIdSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should call res.send with Error status 500 if group service throws error', async () => {

@@ -11,6 +11,7 @@
     "task-1.2-streams": "nodemon core/task-1.2-use-streams.js",
     "task-1.2-streams:babel": "nodemon --exec babel-node core/task-1.2-use-streams-babel.js",
     "test": "jest --silent",
+    "test:dev": "jest --verbose",
     "start": "nodemon --exec ts-node src/index.ts",
     "compile": "rm -rf dist && mkdir dist && tsc",
     "coverage": "jest --coverage",
